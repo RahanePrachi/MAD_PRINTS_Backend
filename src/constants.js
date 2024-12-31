@@ -1,1 +1,1 @@
-export const DB_NAME="MADPrints"
+export const DB_NAME="MADPRINTS"
