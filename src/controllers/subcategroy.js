@@ -1,13 +1,21 @@
-const Subcategory = require('../models/subcategory');
-const Category = require('../models/Category');
+import {SubCategory} from'../models/subcategory.model.js';
+import {Category} from'../models/category.model.js';
 
 // Create Subcategory
-exports.createSubcategory = async (req, res) => {
+const createSubcategory = async (req, res) => {
   try {
-    const { name, description, imageUrl, category } = req.body;
-    const subcategory = await Subcategory.create({ name, description, imageUrl, category });
-
-    await Category.findByIdAndUpdate(category, { $push: { subcategories: subcategory._id } });
+    const {  subCategoryName,  categoryId } = req.body;
+    console.log("printing subcategory: ", subCategoryName);
+    const subcategory = await SubCategory.create({  subCategoryName, categoryId });
+    console.log("printing subcategory: ", subcategory);
+// Validate the input
+if (! subCategoryName || !categoryId) {
+    return res.status(400).json({
+        success: false,
+        message: "Missing required properties",
+    });
+}
+    await Category.findByIdAndUpdate(categoryId, { $push: { subcategories: subcategory._id } });
 
     res.status(201).json({ success: true, data: subcategory });
   } catch (error) {
@@ -16,9 +24,9 @@ exports.createSubcategory = async (req, res) => {
 };
 
 // Get All Subcategories
-exports.getSubcategories = async (req, res) => {
+const getSubcategories = async (req, res) => {
   try {
-    const subcategories = await Subcategory.find().populate('category');
+    const subcategories = await SubCategory.find().populate('category');
     res.status(200).json({ success: true, data: subcategories });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -26,7 +34,7 @@ exports.getSubcategories = async (req, res) => {
 };
 
 // Update Subcategory
-exports.updateSubcategory = async (req, res) => {
+const updateSubcategory = async (req, res) => {
   try {
     const subcategory = await Subcategory.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!subcategory) return res.status(404).json({ success: false, message: 'Subcategory not found' });
@@ -37,7 +45,7 @@ exports.updateSubcategory = async (req, res) => {
 };
 
 // Delete Subcategory
-exports.deleteSubcategory = async (req, res) => {
+const deleteSubcategory = async (req, res) => {
   try {
     const subcategory = await Subcategory.findByIdAndDelete(req.params.id);
     if (!subcategory) return res.status(404).json({ success: false, message: 'Subcategory not found' });
@@ -49,3 +57,6 @@ exports.deleteSubcategory = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
+export {createSubcategory , getSubcategories, updateSubcategory, deleteSubcategory};
