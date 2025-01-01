@@ -7,6 +7,9 @@ const categorySchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
+  thumbnail: {
+		type: String,
+	},
   subcategories: [
     {
       type: mongoose.Schema.Types.ObjectId,

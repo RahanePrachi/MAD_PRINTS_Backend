@@ -6,7 +6,8 @@ const router = express.Router();
 const {
      getCategories,
      createCategory ,
-     getCategoryDetails
+     getCategoryDetails,
+     updateCategory
   }=require("../controllers/Category.js") 
 
 //sucategory controller import
@@ -20,6 +21,7 @@ const {createSubcategory, getSubcategories,
 router.post("/createCategory",createCategory);
 router.get("/showAllCategories", getCategories);
 router.get("/categorydetails/:categoryId", getCategoryDetails);
+router.put("/updateCategory/:id",updateCategory)
 
 //*********subcategory routes ***********/
 router.post("/createSubCategory", createSubcategory);

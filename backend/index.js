@@ -2,6 +2,8 @@ const express =require("express");
 const app=express();
 const cookieParser=require("cookie-parser")
 const dotenv= require("dotenv")
+const {cloudinaryConnect}=require('./config/cloudinary');
+const fileUpload=require('express-fileupload');
 dotenv.config();
 const categoryRoutes=require("./routes/category");
 const database=require("./config/database");
@@ -13,6 +15,15 @@ database.connect();
 //middleware
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+    fileUpload({
+        useTempFiles:true,
+        tempFileDir:"/tmp",
+    })
+)
+
+//cloudinary connection
+cloudinaryConnect();
 
 app.use("/api/v1/category", categoryRoutes);
 
