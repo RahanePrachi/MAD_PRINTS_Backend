@@ -28,17 +28,6 @@ const customizationOptionSchema = new mongoose.Schema({
     }
 });
 
-// **Customization Value Schema**
-// Stores user-provided values based on the defined customization options.
-const customizationValueSchema = new mongoose.Schema({
-    label: { type: String, required: true }, // Label of the customization
-    type: { 
-        type: String, 
-        required: true,
-        enum: ["text", "color", "size", "shape", "file", "number", "other"] // Type of customization value
-    },
-    value: { type: Schema.Types.Mixed, required: true } // Actual value provided by the user
-});
 
 // **Print Detail Schema**
 // Defines specific printing details for customizable products.
@@ -48,13 +37,30 @@ const printDetailSchema = new mongoose.Schema({
         default: ["front", "back"] // Areas available for printing
     },
     printType: {
-        type: String,
-        enum: ["digital", "screen", "embroidery"], // Printing method
-        default: "digital"
+        type: [String],
+        enum: [ "embroidery","Direct To Garment (DTG)" ], // Printing method
+        default: ["Direct To Garment (DTG)"]
     },
     designFileRequired: {
         type: Boolean,
         default: false // Indicates if a design file is mandatory
+    }
+});
+
+const settingSchema=new mongoose.Schema({
+    productType:{
+        type:String
+    },
+    vendor:{
+        type:String,
+        default:"MAD Prints"
+    },
+    tags:{
+        type:[String],
+
+    },
+    collections:{
+        type:String
     }
 });
 
@@ -66,10 +72,12 @@ const productSchema = new Schema(
             type: [String], // URLs of product images
             required: true
         },
+
         thumbnail: {
             type: String, // Thumbnail image URL
             required: true
         },
+
         title: {
             type: String,
             required: true,
@@ -98,6 +106,12 @@ const productSchema = new Schema(
             required: true,
             min: [0, "Price cannot be negative"] // Product price
         },
+        currency_type :{
+            type:String,
+            required:true,
+            enum :["INR", "USD","GB", "CA", "AU"],
+            default:"INR"
+        },
         stock: {
             type: Number,
             required: true,
@@ -119,10 +133,6 @@ const productSchema = new Schema(
             type: [customizationOptionSchema], // Admin-defined customization options
             default: []
         },
-        userCustomizations: {
-            type: [customizationValueSchema], // User-selected customization values
-            default: []
-        },
         printDetails: {
             type: printDetailSchema, // Printing-specific details
             default: {}
@@ -131,7 +141,29 @@ const productSchema = new Schema(
             type: [String],
             default: [] // Available color options
         },
-        isPublished: {
+        size_table_attached:{
+            type: [
+                {
+                    imperial: { type: Boolean, default: false }, // For imperial size table (inches, pounds)
+                    metric: { type: Boolean, default: false }    // For metric size table (cm, kg)
+                }
+            ],
+            default:[]
+        },
+        settings:{
+            type:settingSchema,
+            default:{
+                productType:"",
+                vendor:"MAD Prints",
+                tags:[],
+                collections:""
+            }
+        },
+        is_freeshiping: {
+            type: Boolean,
+            default: true // Product visibility status
+        },
+        is_published: {
             type: Boolean,
             default: true // Product visibility status
         }
