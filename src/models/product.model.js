@@ -4,26 +4,26 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 // **Customization Option Schema**
 // Defines available customization options for a product, set by the admin.
 const customizationOptionSchema = new mongoose.Schema({
-    type: { 
-        type: String, 
+    type: {
+        type: String,
         required: true,
         enum: ["text", "color", "size", "shape", "file", "number", "other"] // Type of customization
     },
-    label: { 
-        type: String, 
+    label: {
+        type: String,
         required: true,
         trim: true // Display name for the customization option
     },
-    options: { 
-        type: [String], 
+    options: {
+        type: [String],
         default: [] // List of selectable options (if applicable)
     },
-    isRequired: { 
-        type: Boolean, 
+    isRequired: {
+        type: Boolean,
         default: false // Indicates if this customization is mandatory
     },
-    defaultValue: { 
-        type: Schema.Types.Mixed, 
+    defaultValue: {
+        type: Schema.Types.Mixed,
         default: null // Default value for this customization option
     }
 });
@@ -38,7 +38,7 @@ const printDetailSchema = new mongoose.Schema({
     },
     printType: {
         type: [String],
-        enum: [ "embroidery","Direct To Garment (DTG)" ], // Printing method
+        enum: ["embroidery", "Direct To Garment (DTG)"], // Printing method
         default: ["Direct To Garment (DTG)"]
     },
     designFileRequired: {
@@ -47,20 +47,20 @@ const printDetailSchema = new mongoose.Schema({
     }
 });
 
-const settingSchema=new mongoose.Schema({
-    productType:{
-        type:String
+const settingSchema = new mongoose.Schema({
+    productType: {
+        type: String
     },
-    vendor:{
-        type:String,
-        default:"MAD Prints"
+    vendor: {
+        type: String,
+        default: "MAD Prints"
     },
-    tags:{
-        type:[String],
+    tags: {
+        type: [String],
 
     },
-    collections:{
-        type:String
+    collections: {
+        type: String
     }
 });
 
@@ -106,11 +106,20 @@ const productSchema = new Schema(
             required: true,
             min: [0, "Price cannot be negative"] // Product price
         },
-        currency_type :{
-            type:String,
-            required:true,
-            enum :["INR", "USD","GB", "CA", "AU"],
-            default:"INR"
+        currency_type: {
+            type: String,
+            required: true,
+            enum: ["INR", "USD", "GB", "CA", "AU"],
+            default: "INR"
+        },
+        deliveryRegion: {
+            type: [String],
+            enum: ["Asia", "North America", "Europe", "Oceania", "South America", "United Kingdom", "Rest of the world"],
+            default: ["Asia", "North America", "Europe", "Oceania", "South America", "United Kingdom", "Rest of the world"],
+        },
+        productUID: {
+            type: String,
+            default: "apparel_product_gca_t- shirt_gsc_crewneck_gcu_unisex_gqa_heavy - weight_gsi_s_gco_white_gpr_4 -0_gildan_5000"
         },
         stock: {
             type: Number,
@@ -141,22 +150,22 @@ const productSchema = new Schema(
             type: [String],
             default: [] // Available color options
         },
-        size_table_attached:{
+        size_table_attached: {
             type: [
                 {
                     imperial: { type: Boolean, default: false }, // For imperial size table (inches, pounds)
                     metric: { type: Boolean, default: false }    // For metric size table (cm, kg)
                 }
             ],
-            default:[]
+            default: []
         },
-        settings:{
-            type:settingSchema,
-            default:{
-                productType:"",
-                vendor:"MAD Prints",
-                tags:[],
-                collections:""
+        settings: {
+            type: settingSchema,
+            default: {
+                productType: "",
+                vendor: "MAD Prints",
+                tags: [],
+                collections: ""
             }
         },
         is_freeshiping: {
