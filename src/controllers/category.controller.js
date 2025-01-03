@@ -41,7 +41,8 @@ const createCategory = async (req, res) => {
 const getCategories = async (req, res) => {
   try {
     const categories = await Category.find()
-                                .populate("subcategories");
+                                .populate("subcategories")
+                                .populate("products");
     res.status(200).json({ 
         success: true, 
         data: categories });

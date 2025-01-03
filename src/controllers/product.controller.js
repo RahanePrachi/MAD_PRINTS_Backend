@@ -1,5 +1,6 @@
 // Product controller
-
+import { SubCategory } from "../models/subcategory.model.js";
+import { Category } from "../models/category.model.js";
 import { Product } from "../models/product.model.js";
 import { deleterCloudinaryFile, uploadOnCloudinary } from "../utils/cloudinary.js";
 
@@ -49,8 +50,21 @@ const createProduct = async (req, res) => {
             is_published: req.body.is_published === "true"
         });
 
+        
         // Save product to database
         await newProduct.save();
+         // Update Category and Subcategory
+         const category = await Category.findById(req.body.category);
+         if (category && !category.products.includes(newProduct._id)) {
+             category.products.push(newProduct._id);
+             await category.save();
+         }
+ 
+         const subCategory = await SubCategory.findById(req.body.sub_category);
+         if (subCategory && !subCategory.products.includes(newProduct._id)) {
+             subCategory.products.push(newProduct._id);
+             await subCategory.save();
+         }
 
         res.status(201).json({
             success: true,
@@ -110,10 +124,53 @@ const deleteProduct = async (req, res) => {
     }
 };
 
+const getProductsByQuery = async (req, res) => {
+    try {
+      const { categoryId, subcategoryId} = req.query;
+  
+    
+      let query = {};
+  
+      // If subcategoryId is provided, query by subcategories
+      if (subcategoryId) {
+        query.subcategories = subcategoryId;
+      }
+  
+      // If categoryId is provided, query by category
+      if (categoryId) {
+        query.category = categoryId;
+      }
+  
+      // Fetch products from the database
+      const products = await Product.find(query);
+   console.log("products: ", products);
+      // If no products are found, return an appropriate response
+      if (products.length === 0) {
+        return res.status(200).json({
+          success: true,
+          message: "No products found for the given criteria.",
+        });
+      }
+  
+      // Success response with product data
+      res.status(200).json({
+        success: true,
+        data: products,
+      });
+    } catch (error) {
+      // Handle any unexpected errors
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while fetching products.",
+        error: error.message,
+      });
+    }
+  };
 export {
     createProduct,
     getProducts,
     getProductById,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductsByQuery
 }
