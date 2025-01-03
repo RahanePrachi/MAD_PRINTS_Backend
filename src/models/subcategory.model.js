@@ -24,7 +24,4 @@ const subcategorySchema = new mongoose.Schema({
 
 
 
-
-// Export the Product model
-
 export const SubCategory = mongoose.model('SubCategory', subcategorySchema);

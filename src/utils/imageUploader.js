@@ -1,7 +1,8 @@
-const cloudinary= require("cloudinary").v2
+// const cloudinary= require("cloudinary").v2
+import { v2 as cloudinary } from 'cloudinary';
 
 //upload image to cloudinary
-exports.uploadImageCloudinary=async (file, folder, height, quality)=>{
+const uploadImageCloudinary=async (file, folder, height, quality)=>{
     const options={folder};
     console.log("temp file path :", file.tempFilePath);
     if(height){
@@ -17,3 +18,5 @@ exports.uploadImageCloudinary=async (file, folder, height, quality)=>{
 
 
 }
+
+export {uploadImageCloudinary}
