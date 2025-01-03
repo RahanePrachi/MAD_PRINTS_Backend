@@ -62,24 +62,17 @@ const mongoose = require("mongoose");
 // Represents a product in the e-commerce platform.
 const productSchema =  new mongoose.Schema(
     {
-        images: {
-            type: [String], // URLs of product images
+        image: {
+            type: String, // URLs of product images
             required: true
         },
-        thumbnail: {
-            type: String, // Thumbnail image URL
-            required: true
-        },
+       
         title: {
             type: String,
             required: true,
             trim: true // Product title
         },
-        description: {
-            type: String,
-            required: true,
-            trim: true // Product description
-        },
+       
         // category: {
         //     type: String,
         //     required: true,
@@ -100,48 +93,7 @@ const productSchema =  new mongoose.Schema(
               ref: "SubCategory",
             },
           ],
-        price: {
-            type: Number,
-            required: true,
-            min: [0, "Price cannot be negative"] // Product price
-        },
-        stock: {
-            type: Number,
-            required: true,
-            min: [0, "Stock cannot be negative"] // Product stock
-        },
-        brand: {
-            type: String,
-            trim: true // Brand name
-        },
-        features: {
-            type: [String],
-            required: true // Key product features
-        },
-        care_instructions: {
-            type: [String],
-            default: [] // Product care instructions
-        },
-        // customizationOptions: {
-        //     type: [customizationOptionSchema], // Admin-defined customization options
-        //     default: []
-        // },
-        // userCustomizations: {
-        //     type: [customizationValueSchema], // User-selected customization values
-        //     default: []
-        // },
-        // printDetails: {
-        //     type: printDetailSchema, // Printing-specific details
-        //     default: {}
-        // },
-        available_colors: {
-            type: [String],
-            default: [] // Available color options
-        },
-        isPublished: {
-            type: Boolean,
-            default: true // Product visibility status
-        }
+       
     },
     { timestamps: true } // Automatically adds createdAt and updatedAt timestamps
 );

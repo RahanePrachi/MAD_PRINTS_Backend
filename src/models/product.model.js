@@ -1,9 +1,10 @@
+
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 // **Customization Option Schema**
 // Defines available customization options for a product, set by the admin.
-const customizationOptionSchema = new mongoose.Schema({
+const customizationOptionSchema = new Schema({
     type: {
         type: String,
         required: true,
@@ -89,18 +90,27 @@ const productSchema = new Schema(
             trim: true // Product description
         },
         category: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
             required: true,
-            enum: [
-                "Men's Clothing", "Women's Clothing", "Kids' Clothing",
-                "Wall Art", "Tote Bags", "Hats", "Phone Cases",
-                "Mugs & Bottles", "Stationery", "Calendars", "Cards", "Brands"
-            ] // Predefined categories
         },
         sub_category: {
-            type: String,
-            default: "" // Optional sub-category
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SubCategory",
         },
+        // category: {
+        //     type: String,
+        //     required: true,
+        //     enum: [
+        //         "Men's Clothing", "Women's Clothing", "Kids' Clothing",
+        //         "Wall Art", "Tote Bags", "Hats", "Phone Cases",
+        //         "Mugs & Bottles", "Stationery", "Calendars", "Cards", "Brands"
+        //     ] // Predefined categories
+        // },
+        // sub_category: {
+        //     type: String,
+        //     default: "" // Optional sub-category
+        // },
         price: {
             type: Number,
             required: true,

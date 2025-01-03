@@ -6,6 +6,7 @@ const {cloudinaryConnect}=require('./config/cloudinary');
 const fileUpload=require('express-fileupload');
 dotenv.config();
 const categoryRoutes=require("./routes/category");
+const productRoutes=require("./routes/product")
 const database=require("./config/database");
 const PORT=process.env.PORT || 4000;
 app.use(express.json());
@@ -21,12 +22,13 @@ app.use(
         tempFileDir:"/tmp",
     })
 )
-
+const cors = require('cors');
+app.use(cors());
 //cloudinary connection
 cloudinaryConnect();
 
 app.use("/api/v1/category", categoryRoutes);
-
+app.use("/api/v1/product", productRoutes);
 
 app.get("/", (req, res)=>{
     return res.json({
