@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-
+import { SubCategory } from "./subcategory.model.js";
 const categorySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -8,11 +8,13 @@ const categorySchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-
+  thumbnail: {
+    type: String,
+  },
   subcategories: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Subcategory",
+      ref: "SubCategory",
     },
   ],
   products: [
@@ -23,4 +25,7 @@ const categorySchema = new mongoose.Schema({
   ],
 });
 
-export const Category = mongoose.model("Category", categorySchema);
+
+
+// Export the Product model
+export const Category= mongoose.model("Category", categorySchema);
