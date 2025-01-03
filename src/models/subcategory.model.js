@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-import { Category } from "./category.model";
+// import  Category  from "./category.model";
 // const Category = require("../models/Category"); 
 
 const subcategorySchema = new mongoose.Schema({
@@ -26,8 +26,5 @@ const subcategorySchema = new mongoose.Schema({
 });
 
 
-
-
-// Export the Product model
 
 export const SubCategory = mongoose.model('SubCategory', subcategorySchema);
