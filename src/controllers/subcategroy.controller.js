@@ -1,7 +1,7 @@
 import {SubCategory} from "../models/subcategory.model.js";
 import {Category} from "../models/category.model.js"
-import { uploadImageCloudinary } from "../utils/imageUploader.js"
 import {Product} from "../models/product.model.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // Create Subcategory
 const createSubcategory = async (req, res) => {
     try {

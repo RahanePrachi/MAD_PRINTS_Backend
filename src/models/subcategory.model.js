@@ -1,9 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-import { Category } from "./category.model";
-// const Category = require("../models/Category"); 
-
 const subcategorySchema = new mongoose.Schema({
   subCategoryName: {
     type: String,

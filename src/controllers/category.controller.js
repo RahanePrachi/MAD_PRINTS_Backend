@@ -1,10 +1,12 @@
 import { Category } from"../models/category.model.js"
-import { uploadImageCloudinary } from "../utils/imageUploader.js"
+import { deleterCloudinaryFile, uploadOnCloudinary } from "../utils/cloudinary.js";
+import { SubCategory } from "../models/subcategory.model.js";
 // Create Category
 const createCategory = async (req, res) => {
+  let thumbnail_url=""
   try {
     const { name } = req.body;
-    const thumbnail = req.files.thumbnailImage;
+    const thumbnail = req.files['photo']?.[0]?.path;
     //validation
     if (!name || !thumbnail) {
       return res
@@ -13,18 +15,22 @@ const createCategory = async (req, res) => {
     }
 
       //upload image to cloudinary
-        const thumbnailImage = await uploadImageCloudinary(
+        const thumbnailImage = await uploadOnCloudinary(
           thumbnail,
           process.env.FOLDER_NAME
         );
 
+    thumbnail_url=thumbnailImage.secure_url;
     const category = await Category.create({ name,  thumbnail: thumbnailImage.secure_url });
+
     res.status(200).json({
       success: true,
       message: "Categorys Created Successfully",
       data: category,
     });
   } catch (error) {
+    if(thumbnail_url !== "")
+      deleterCloudinaryFile(thumbnail_url)
     res.status(400).json({ 
         success: false, 
         message: error.message });
@@ -80,9 +86,10 @@ const getCategoryDetails = async (req, res) => {
 
 // Update Category
 const updateCategory = async (req, res) => {
+  let thumbnail_url=""
   try {
     const { name } = req.body;
-    const thumbnail = req.files?.thumbnailImage; // Optional thumbnail image
+    const thumbnail = req.files['photo']?.[0]?.path; // Optional thumbnail image
     const updates = {};
 
     // If a new name is provided
@@ -93,10 +100,11 @@ const updateCategory = async (req, res) => {
     // If a new thumbnail is provided
     if (thumbnail) {
       // Upload the new thumbnail image to Cloudinary
-      const thumbnailImage = await uploadImageCloudinary(
+      const thumbnailImage = await uploadOnCloudinary(
         thumbnail,
         process.env.FOLDER_NAME
       );
+      thumbnail_url=thumbnailImage.secure_url
       updates.thumbnail = thumbnailImage.secure_url; // Update the thumbnail URL
     }
 
@@ -120,6 +128,9 @@ const updateCategory = async (req, res) => {
       data: category 
     });
   } catch (error) {
+    if (thumbnail_url !==""){
+      deleterCloudinaryFile(thumbnail_url)
+    }
     console.error("Error in updateCategory:", error);
     res.status(400).json({ success: false, message: error.message });
   }
@@ -128,14 +139,21 @@ const updateCategory = async (req, res) => {
 
 //Delete Category
 const deleteCategory = async (req, res) => {
+  let thumbnail_url=""
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
+    thumbnail_url=category.thumbnail
     if (!category)
       return res
         .status(404)
         .json({ success: false, message: "Category not found" });
-    await Subcategory.deleteMany({ category: category._id });
-    res
+
+    await SubCategory.deleteMany({ category: category._id });
+   
+    if(thumbnail_url!==""){
+      deleterCloudinaryFile(thumbnail_url)
+    }
+    return res
       .status(200)
       .json({ success: true, message: "Category deleted successfully" });
   } catch (error) {
