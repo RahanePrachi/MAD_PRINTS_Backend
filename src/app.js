@@ -25,7 +25,7 @@ import categoryRouter from "./routes/category.route.js"
 
 //route declaration
 app.use("/api/v1/product",productRouter); //https://localhost:8000/api/v1/users/login or register
-app.use("api/v1/category", categoryRouter);
+app.use("/api/v1/category", categoryRouter);
 
 app.get("/", (req, res)=>{
     return res.json({
