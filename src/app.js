@@ -27,10 +27,10 @@ import categoryRouter from "./routes/category.route.js"
 app.use("/api/v1/product",productRouter); //https://localhost:8000/api/v1/users/login or register
 app.use("api/v1/category", categoryRouter);
 
-// app.get("/", (req, res)=>{
-//     return res.json({
-//         success:true,
-//         message:"Your server is running ..."
-//     })
-// })
+app.get("/", (req, res)=>{
+    return res.json({
+        success:true,
+        message:"Your server is running ..."
+    })
+})
 export default app

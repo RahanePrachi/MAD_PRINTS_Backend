@@ -23,7 +23,7 @@ exports.createProduct = async (req, res) => {
     const product = await Product.create({
       image: uploadedImage.secure_url,
       title,
-    
+
       category,
       subcategories,
      
