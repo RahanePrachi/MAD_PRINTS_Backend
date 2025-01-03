@@ -31,7 +31,12 @@ router.post("/createCategory",
 );
 router.get("/showAllCategories", getCategories);
 router.get("/categorydetails/:categoryId", getCategoryDetails);
-router.put("/updateCategory/:id", updateCategory)
+router.put("/updateCategory/:id",upload.fields([
+  {
+    name: "photo",
+    maxCount: 1,
+  },
+]), updateCategory)
 
 //*********subcategory routes ***********/
 router.post("/createSubCategory", createSubcategory);
