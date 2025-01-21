@@ -22,10 +22,15 @@ app.use(cookieParser());
 
 import productRouter from './routes/product.route.js'
 import categoryRouter from "./routes/category.route.js"
-
+import userRouter from "./routes/user.route.js"
+import orderRouter from "./routes/order.route.js"
+import paymentRoutes from "./routes/payment.route.js"
 //route declaration
+app.use("/api/v1/auth", userRouter)
 app.use("/api/v1/product",productRouter); //https://localhost:8000/api/v1/users/login or register
 app.use("/api/v1/category", categoryRouter);
+app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/payment", paymentRoutes)
 
 app.get("/", (req, res)=>{
     return res.json({

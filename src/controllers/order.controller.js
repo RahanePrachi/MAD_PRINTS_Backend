@@ -1,15 +1,22 @@
-import Order from '../models/Order.js'; // Adjust the path as needed
-import AddressDetail from '../models/AddressDetail.js';
+import {Order} from '../models/order.model.js'; // Adjust the path as needed
+import { Product } from '../models/product.model.js';
+// import AddressDetail from '../models/AddressDetail.js';
+import { get } from 'mongoose';
 
 
-// Place a New Order (Guest or Registered User)
-export const placeOrder = async (req, res) => {
+const placeOrder = async (req, res) => {
     try {
         const { addressDetails, products, totalAmount, status } = req.body;
 
         // Validate Address Details
-        if (!addressDetails) {
-            return res.status(400).json({ error: "Address details are required." });
+        const requiredAddressFields = [
+            "name", "email", "mobile", "pincode", "flatHouse",
+            "streetAddress", "townCity", "state", "shoppingMode"
+        ];
+        for (const field of requiredAddressFields) {
+            if (!addressDetails[field]) {
+                return res.status(400).json({ error: `Address field '${field}' is required.` });
+            }
         }
 
         // Validate Products Array
@@ -18,7 +25,7 @@ export const placeOrder = async (req, res) => {
         }
 
         // Validate Total Amount
-        if (typeof totalAmount !== 'number' || totalAmount <= 0) {
+        if (typeof totalAmount !== "number" || totalAmount <= 0) {
             return res.status(400).json({ error: "Total amount must be a positive number." });
         }
 
@@ -30,11 +37,11 @@ export const placeOrder = async (req, res) => {
                 return res.status(400).json({ error: "Product ID is required for each product." });
             }
 
-            if (typeof quantity !== 'number' || quantity < 1) {
+            if (typeof quantity !== "number" || quantity < 1) {
                 return res.status(400).json({ error: "Product quantity must be at least 1." });
             }
 
-            if (typeof price !== 'number' || price < 0) {
+            if (typeof price !== "number" || price < 0) {
                 return res.status(400).json({ error: "Product price must be a non-negative number." });
             }
 
@@ -49,18 +56,12 @@ export const placeOrder = async (req, res) => {
             }
         }
 
-        // Validate Address Exists
-        const existingAddress = await AddressDetail.findById(addressDetails);
-        if (!existingAddress) {
-            return res.status(404).json({ error: "Address details not found." });
-        }
-
         // Create Order Document
         const order = new Order({
             addressDetails,
             products,
             totalAmount,
-            status: status || 'pending'
+            status: status || "pending",
         });
 
         // Save Order
@@ -74,7 +75,7 @@ export const placeOrder = async (req, res) => {
 };
 
 // Get Order Details by ID
-export const getOrderById = async (req, res) => {
+const getOrderById = async (req, res) => {
     try {
         const { orderId } = req.params;
 
@@ -94,7 +95,7 @@ export const getOrderById = async (req, res) => {
 };
 
 // List All Orders (Admin Only)
-export const getAllOrders = async (req, res) => {
+const getAllOrders = async (req, res) => {
     try {
         const orders = await Order.find()
             .populate('addressDetails')
@@ -109,7 +110,7 @@ export const getAllOrders = async (req, res) => {
 };
 
 // Update Order Status
-export const updateOrderStatus = async (req, res) => {
+const updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
         const { status } = req.body;
@@ -136,7 +137,7 @@ export const updateOrderStatus = async (req, res) => {
 };
 
 // Delete an Order
-export const deleteOrder = async (req, res) => {
+const deleteOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
 
@@ -152,3 +153,8 @@ export const deleteOrder = async (req, res) => {
         res.status(500).json({ error: "Failed to delete order." });
     }
 };
+
+
+export {
+    placeOrder, getAllOrders, getOrderById, deleteOrder, updateOrderStatus
+}
